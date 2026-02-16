@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Taste Test Journal</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>Taste Test Journal</h1>
+      <p>Track strains in a portable database file you can move between computers.</p>
+    </header>
+
+    <main class="layout">
+      <section class="panel dashboard-panel">
+        <div class="dashboard-header">
+          <h2>Dashboard</h2>
+          <p id="entryCount">0 strains logged</p>
+        </div>
+
+        <section class="data-toolbar" aria-label="Database controls">
+          <div class="data-toolbar-buttons">
+            <button id="exportDbBtn" type="button">Export DB (.json)</button>
+            <button id="importDbBtn" type="button" class="ghost">Import DB</button>
+            <button id="newDbBtn" type="button" class="ghost">New Empty DB</button>
+            <input id="importDbInput" type="file" accept="application/json,.json" hidden />
+          </div>
+          <p id="dbStatus" class="db-status">Current DB: In-memory only (import or export a file).</p>
+        </section>
+
+        <div class="search-grid">
+          <label>
+            Search name / notes
+            <input id="searchText" type="search" placeholder="Blue Dream, citrus, relaxing..." />
+          </label>
+          <label>
+            Min rating
+            <select id="minRating">
+              <option value="">Any</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="3">3+</option>
+              <option value="4">4+</option>
+              <option value="5">5</option>
+            </select>
+          </label>
+          <label>
+            Min THC %
+            <input id="minThc" type="number" min="0" max="100" step="0.1" placeholder="Any" />
+          </label>
+          <label>
+            Min CBD %
+            <input id="minCbd" type="number" min="0" max="100" step="0.1" placeholder="Any" />
+          </label>
+          <label>
+            Sort by
+            <select id="sortBy">
+              <option value="newest">Newest purchase</option>
+              <option value="oldest">Oldest purchase</option>
+              <option value="ratingDesc">Rating high → low</option>
+              <option value="thcDesc">THC high → low</option>
+              <option value="nameAsc">Name A → Z</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="strainList" class="strain-list" aria-live="polite"></div>
+      </section>
+
+      <section class="panel form-panel">
+        <h2>Add / Update Strain</h2>
+        <form id="strainForm">
+          <input id="entryId" type="hidden" />
+
+          <label>
+            Strain name *
+            <input id="name" required maxlength="120" />
+          </label>
+
+          <div class="split">
+            <label>
+              Date bought
+              <input id="dateBought" type="date" />
+            </label>
+            <label>
+              Date packaged
+              <input id="datePackaged" type="date" />
+            </label>
+          </div>
+
+          <div class="split">
+            <label>
+              Rating / 5
+              <input id="rating" type="hidden" />
+              <div id="ratingStars" class="star-rating" role="radiogroup" aria-label="Rating out of 5 stars">
+                <button type="button" class="star-btn" data-value="1" aria-label="1 star">★</button>
+                <button type="button" class="star-btn" data-value="2" aria-label="2 stars">★</button>
+                <button type="button" class="star-btn" data-value="3" aria-label="3 stars">★</button>
+                <button type="button" class="star-btn" data-value="4" aria-label="4 stars">★</button>
+                <button type="button" class="star-btn" data-value="5" aria-label="5 stars">★</button>
+              </div>
+            </label>
+            <label>
+              Terpenes %
+              <input id="terpenes" type="number" min="0" max="100" step="0.01" />
+            </label>
+          </div>
+
+          <div class="split">
+            <label>
+              THC %
+              <input id="thc" type="number" min="0" max="100" step="0.01" />
+            </label>
+            <label>
+              CBD %
+              <input id="cbd" type="number" min="0" max="100" step="0.01" />
+            </label>
+          </div>
+
+          <label>
+            Notes
+            <textarea id="notes" rows="4" maxlength="2000" placeholder="Flavor, effects, value... "></textarea>
+          </label>
+
+          <fieldset>
+            <legend>Other percentages to track</legend>
+            <div id="customMetrics" class="custom-metrics"></div>
+            <div class="metric-adder">
+              <input id="newMetricName" placeholder="e.g. CBG" maxlength="40" />
+              <button id="addMetricBtn" type="button">Add field</button>
+            </div>
+          </fieldset>
+
+          <div class="form-actions">
+            <button type="submit">Save strain</button>
+            <button id="resetBtn" type="button" class="ghost">Clear</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <template id="strainCardTemplate">
+      <article class="strain-card">
+        <header>
+          <h3></h3>
+          <span class="rating"></span>
+        </header>
+        <p class="dates"></p>
+        <p class="metrics"></p>
+        <p class="notes"></p>
+        <div class="links"></div>
+        <footer>
+          <button class="edit-btn" type="button">Edit</button>
+          <button class="delete-btn" type="button">Delete</button>
+        </footer>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
